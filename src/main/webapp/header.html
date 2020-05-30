@@ -1,0 +1,88 @@
+<!-- 头部 start -->
+    <script src="js/getParameter.js"></script>
+    <script>
+        $(function () {
+            //get login user's name
+            $.get("user/findUser",{},function (data) {
+                if (data!=null) {
+                    $("#welcome").html("Hi, " + data.name +"!");
+                }
+            },"json")
+
+            //get categories  category/findAll
+            $.get("category/findAll",{},function (data) { //[{cid:1,cname:***}, {}]
+                var lis = '<li class="nav-active"><a href="index.html">Home</a></li>';
+                for (var i = 0; i < data.length; i++) {
+                    var li = '<li><a href="route_list.html?cid='+data[i].cid+'">' + data[i].cname + '</a></li>';
+                    lis+=li;
+                }
+                lis+='<li><a href="favoriterank.html">收藏排行榜</a></li>';
+                $("#category").html(lis);
+            },"json")
+
+            //vague search
+            $("#search-button").click(function () {
+                var rname = $("#search_input").val();
+                //http://localhost/travel/route_list.html?cid=2&rname=***
+                location.href = "http://localhost/travel/route_list.html?cid=" + getParameter("cid") + "&rname=" + rname;
+            });
+        })
+    </script>
+    <header id="header">
+        <div class="top_banner">
+            <img src="images/top_banner.jpg" alt="">
+        </div>
+        <div class="shortcut">
+            <!-- 未登录状态  -->
+            <div class="login_out">
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+            </div>
+            <!-- 登录状态  -->
+            <div class="login">
+            	
+                <span id="welcome">Hi, guest!</span>
+                <a href="myfavorite.html" class="collection">Favorites</a>
+                <a href="javascript:location.href='user/exit';">Exit</a>
+            </div>
+        </div>
+        <div class="header_wrap">
+            <div class="topbar">
+                <div class="logo" style="padding-left: 15px">
+                    <a href="blog.html"><img src="images/logo.jpg" alt="" style="width: 220px; height: 54px"></a>
+                </div>
+                <div class="search">
+                    <input name="" type="text" id="search_input" placeholder="Search travel route" class="search_input" autocomplete="off">
+                    <a href="javascript:;" id="search-button" class="search-button">Search</a>
+                </div>
+                <div class="hottel">
+                    <div class="hot_pic">
+                        <img src="images/hot_tel.jpg" alt="">
+                    </div>
+                    <div class="hot_tel">
+                        <p class="hot_time" style="font-style: oblique">Always here for you</p>
+                        <p class="hot_num" style="font-style: oblique">+12177212935</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 头部 end -->
+     <!-- 首页导航 -->
+    <div class="navitem">
+        <ul id="category" class="nav">
+            <!--
+            <li class="nav-active"><a href="index.html">Home</a></li>
+            <li><a href="route_list.html">1</a></li>
+            <li><a href="route_list.html">2</a></li>
+            <li><a href="route_list.html">3</a></li>
+            <li><a href="route_list.html">4</a></li>
+            <li><a href="route_list.html">5</a></li>
+            <li><a href="route_list.html">6</a></li>
+            <li><a href="route_list.html">7</a></li>
+            <li><a href="route_list.html">9</a></li>
+            <li><a href="favoriterank.html">fav</a></li>
+            -->
+        </ul>
+    </div>
+    

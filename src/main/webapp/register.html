@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Best in Travel-Register</title>
+        <link rel="stylesheet" type="text/css" href="css/common.css">
+        <link rel="stylesheet" href="css/register.css">
+		<!-- import jquery -->
+		<script src="js/jquery-3.3.1.js"></script>
+		<script>
+			function checkUsername() {
+				var username = $("#username").val();
+				var reg = /^\w{6,20}$/;
+				var flag = reg.test(username);
+				if (!flag) {
+					$("#username").css("border","1px solid red");
+				} else {
+					$("#username").css("border","");
+				}
+				return flag;
+			}
+
+			function checkPassword() {
+				var password = $("#password").val();
+				var reg = /^\w{8,20}$/;
+				var flag = reg.test(password);
+				if (!flag) {
+					$("#password").css("border","1px solid red");
+				} else {
+					$("#password").css("border","");
+				}
+				return flag;
+			}
+
+			function checkEmail() {
+				var email = $("#email").val();
+				var reg = /^\w+@\w+\.\w+$/; //***@***.***
+				var flag = reg.test(email);
+				if (flag) {
+					$("#email").css("border","");
+				} else {
+					$('#email').css("border","1px solid red");
+				}
+				return flag;
+			}
+
+			function checkName() {
+				var name = $("#name").val();
+				var reg = /^\w+$/;
+				var flag = reg.test(name);
+				if (flag) {
+					$("#name").css("border","");
+				} else {
+					$('#name').css("border","1px solid red");
+				}
+				return flag;
+			}
+
+			function checkPhone() {
+				var telephone = $("#telephone").val();
+				var reg = /^\w+$/;
+				var flag = reg.test(telephone);
+				if (flag) {
+					$("#telephone").css("border","");
+				} else {
+					$('#telephone').css("border","1px solid red");
+				}
+				return flag;
+			}
+
+			function checkCode() {
+				var check = $("#check").val();
+				var reg = /^\w{4}$/;
+				var flag = reg.test(check);
+				if (flag) {
+					$("#check").css("border","");
+				} else {
+					$('#check').css("border","1px solid red");
+				}
+				return flag;
+			}
+
+
+			$(function () {
+				//check input data when not focusing
+				$("#username").blur(checkUsername);
+				$("#password").blur(checkPassword);
+				$("#email").blur(checkEmail);
+				$("#name").blur(checkName);
+				$("#telephone").blur(checkPhone);
+				$("#check").blur(checkCode);
+
+				//check before submit
+				$("#registerForm").submit(function () { //serialize -> username=cass&password=123...
+					if (checkUsername() && checkPassword() && checkEmail() && checkName() && checkPhone() && checkCode()) {
+						$.post("user/register",$(this).serialize(),function (data) {
+							if(data.flag) {
+								location.href="register_ok.html";
+							} else {
+								$("#error_msg").html(data.errorMsg);
+							}
+						},"json")
+					}
+
+					return false;
+				})
+			});
+		</script>
+    </head>
+	<body>
+	<!--引入头部-->
+	<div id="header"></div>
+        <!-- 头部 end -->
+    	<div class="rg_layout">
+    		<div class="rg_form clearfix">
+    			<div class="rg_form_left">
+    				<p>New User?</p>
+    				<p>USER REGISTER</p>
+    			</div>
+    			<div class="rg_form_center">
+					<div id="error_msg" style="color: red; text-align: center" ></div>
+					<!--注册表单-->
+    				<form id="registerForm">
+						<!--提交处理请求的标识符-->
+						<input type="hidden" name="action" value="register">
+    					<table style="margin-top: 25px;">
+    						<tr>
+    							<td class="td_left">
+    								<label for="username">Username</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="username" name="username" placeholder="Please enter your username">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="password">Password</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="password" name="password" placeholder="Please enter your password">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="email">Email</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="email" name="email" placeholder="Please enter your email address">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="name">Name</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="name" name="name" placeholder="Please enter your real name">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="telephone">Phone</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="telephone" name="telephone" placeholder="Please enter your phone number">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="sex">Gender</label>
+    							</td>
+    							<td class="td_right gender">
+    								<input type="radio" id="sex" name="sex" value="Male" checked> Male
+    								<input type="radio" name="sex" value="Female"> Female
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="birthday">Birthday</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="date" id="birthday" name="birthday">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="check">CheckCode</label>
+    							</td>
+    							<td class="td_right check">
+    								<input type="text" id="check" name="check" class="check">
+    								<img src="checkCode" height="32px" alt="" onclick="changeCheckCode(this)">
+									<script type="text/javascript">
+										//click img  to refresh check code
+										function changeCheckCode(img) {
+											img.src="checkCode?"+new Date().getTime();
+                                        }
+									</script>
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left"> 
+    							</td>
+    							<td class="td_right check"> 
+    								<input type="submit" class="submit" value="Register">
+									<span id="msg" style="color: red;"></span>
+    							</td>
+    						</tr>
+    					</table>
+    				</form>
+    			</div>
+    			<div class="rg_form_right">
+    				<p>
+    					Have an account?
+    					<a href="#">Login</a>
+    				</p>
+    			</div>
+    		</div>
+    	</div>
+        <!--引入尾部-->
+    	<div id="footer"></div>
+		<!--导入布局js，共享header和footer-->
+		<script type="text/javascript" src="js/include.js"></script>
+    	
+    </body>
+</html>

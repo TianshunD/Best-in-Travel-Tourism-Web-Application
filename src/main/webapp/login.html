@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Best in Travel-Login</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+      <!--导入angularJS文件-->
+    <script src="js/angular.min.js"></script>
+	<!--导入jquery-->
+	<script src="js/jquery-3.3.1.js"></script>
+	<script>
+		function checkUsername() {
+			var username = $("#username").val();
+			var reg = /^\w{6,20}$/;
+			var flag = reg.test(username);
+			if (!flag) {
+				$("#username").css("border","1px solid red");
+			} else {
+				$("#username").css("border","");
+			}
+			return flag;
+		}
+
+		function checkPassword() {
+			var password = $("#password").val();
+			var reg = /^\w{8,20}$/;
+			var flag = reg.test(password);
+			if (!flag) {
+				$("#password").css("border","1px solid red");
+			} else {
+				$("#password").css("border","");
+			}
+			return flag;
+		}
+
+		function checkCode() {
+			var check = $("#check").val();
+			var reg = /^\w{4}$/;
+			var flag = reg.test(check);
+			if (flag) {
+				$("#check").css("border","");
+			} else {
+				$('#check').css("border","1px solid red");
+			}
+			return flag;
+		}
+
+		$(function () {
+			//check input data when not focusing
+			$("#username").blur(checkUsername);
+			$("#password").blur(checkPassword);
+			$("#check").blur(checkCode);
+
+			$("#submit").click(function () {
+				if (checkUsername() && checkPassword() && checkCode()) {
+					$.post("user/login",$("#loginForm").serialize(),function (data) {
+						if (data.flag) {
+							location.href = "index.html";
+						} else {
+							$("#errorMsg").html(data.errorMsg);
+						}
+					},"json")
+				}
+			})
+		})
+	</script>
+</head>
+
+<body>
+<!--引入头部-->
+<div id="header"></div>
+    <!-- 头部 end -->
+    <section id="login_wrap">
+        <div class="fullscreen-bg" style="background: url(images/login_bg.png);height: 532px;">
+        	
+        </div>
+        <div class="login-box">
+        	<div class="title">
+        		<img src="images/login_logo.png" alt="">
+        		<span>Welcome - Login</span>
+        	</div>
+        	<div class="login_inner">
+				
+				<!--Login fail alert info-->
+        		<div id="errorMsg" class="alert alert-danger"></div>
+				<form id="loginForm" action="" method="post" accept-charset="utf-8">
+        			<input type="hidden" name="action" value="login"/>
+					<input name="username" id="username" type="text" placeholder="Please enter your username" autocomplete="off">
+        			<input name="password" id="password" type="text" placeholder="Please enter your password" autocomplete="off">
+        			<div class="verify">
+					<input name="check" id="check" type="text" autocomplete="off">
+					<span><img src="checkCode" alt="" onclick="changeCheckCode(this)"></span>
+					<script type="text/javascript">
+						//click to refresh check code
+						function changeCheckCode(img) {
+							img.src="checkCode?"+new Date().getTime();
+						}
+					</script>
+			</div>
+			<div class="submit_btn">
+        				<button type="button" id="submit">Login</button>
+        				<div class="auto_login">
+        					<input type="checkbox" name="" class="checkbox">
+        					<span style="font-size: 15px">Set Auto</span>
+        				</div>        				
+        			</div>        			       		
+        		</form>
+        		<div class="reg">New user? <a href="javascript:;">Register now</a></div>
+        	</div>
+        </div>
+    </section>
+    <!--引入尾部-->
+    <div id="footer"></div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!--导入布局js，共享header和footer-->
+    <script type="text/javascript" src="js/include.js"></script>
+</body>
+
+</html>
